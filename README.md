@@ -74,8 +74,15 @@ Despite growing Bitcoin adoption, accurately forecasting cryptocurrency prices r
 Time Series/
 ├── README.md
 ├── index.ipynb              # Main analysis notebook
+├── deployment.ipynb         # Deployment documentation
+├── app/
+│   ├── Dockerfile          # Container configuration
+│   ├── main.py            # FastAPI application
+│   ├── model.pkl          # Trained ML model
+│   └── requirements.txt   # API dependencies
 ├── data/
 │   └── bitcoin_historical_data.csv
+└── LICENSE
 ```
 
 ## Usage
@@ -100,6 +107,58 @@ model = ARIMA(train_data, order=(1,1,1)).fit()
 predictions = model.forecast(steps=len(test_data))
 ```
 
+## Deployment
+
+### REST API with FastAPI
+The trained model is deployed as a REST API using FastAPI and Docker containerization.
+
+**API Endpoints:**
+- `GET /` - Health check
+- `POST /predict` - Bitcoin price prediction
+
+**Quick Start:**
+```bash
+# Build Docker image
+docker build -t bitcoin-forecast-api ./app
+
+# Run container
+docker run -p 8000:8000 bitcoin-forecast-api
+
+# Test API
+curl http://localhost:8000/docs
+```
+
+**API Usage:**
+```json
+{
+  "Open": 60000,
+  "High": 60500,
+  "Low": 59000,
+  "Volume": 123456,
+  "lag_1": 59800,
+  "lag_2": 59000,
+  "lag_3": 58500,
+  "lag_4": 58000,
+  "lag_5": 57500,
+  "lag_7": 56000
+}
+```
+
+**Response:**
+```json
+{
+  "predicted_close": 59234.56
+}
+```
+
+### Cloud Deployment Options (Next Steps)
+- **AWS**: ECS, Lambda, or EC2
+- **Google Cloud**: Cloud Run
+- **Heroku**: Container Registry
+- **Azure**: Container Instances
+
+See `deployment.ipynb` for detailed deployment instructions.
+
 ## Future Enhancements
 
 - Real-time data integration
@@ -107,11 +166,28 @@ predictions = model.forecast(steps=len(test_data))
 - Advanced deep learning architectures
 - Multi-step ahead forecasting
 - Risk management integration
+- API authentication and rate limiting
+- Model versioning and A/B testing
+
+## Technical Stack
+
+**Analysis & Modeling:**
+- Python 3.10+
+- pandas, numpy, matplotlib
+- statsmodels, scikit-learn
+- Jupyter Notebook
+
+**Deployment:**
+- FastAPI for REST API
+- Docker for containerization
+- uvicorn ASGI server
+- joblib for model serialization
 
 ## Contributors
 
 - Billy Sambasi - Data Scientist
+- Project developed as part of Flatiron School Data Science Program
 
 ## License
 
-This project is licensed under the Apache License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.
