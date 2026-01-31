@@ -1,7 +1,8 @@
-fastapi
-uvicorn
-pandas
-numpy
-scikit-learn
-joblib
-statsmodels
+fastapi>=0.115.0          # Latest stable as of late 2025/early 2026
+uvicorn[standard]>=0.32.0 # Includes optional deps like httptools, uvloop for better perf
+gunicorn>=23.0.0          # Process manager for multi-worker production setup
+pandas>=2.2.0
+numpy>=2.0.0              # Often pinned to major version for scikit-learn compat
+scikit-learn>=1.5.0       # Assuming your model.pkl is from sklearn
+joblib>=1.4.0             # For model loading
+statsmodels>=0.14.0
